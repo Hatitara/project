@@ -97,7 +97,6 @@ After downloading, the notebooks can directly load the CSV files from the local 
 | **`train_v1.ipynb`** | Training on the **newer and larger dataset**. | Main and recommended training pipeline. Produces final experimental results. Use this to reproduce core findings. |
 | **`quenrecommender-2.ipynb`** | Additional or **alternative recommender experiments**. | Exploration of non-core ideas. Running this notebook is optional. |
 | **`app.py`** | **Application Entry Point**. | Serves as the main interface for the Streamlit web app. Solves "Cold Start" problem, allows dynamic profiling, uses LightFM model, and integrates Jikan API for covers. |
-| **`rec.pdf`** | **Project report**. | Description of motivation, datasets, methodology, experiments, and conclusions. |
 
 ---
 
