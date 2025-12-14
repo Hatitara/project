@@ -13,7 +13,7 @@ Thumbs.db
 
 # Environment files
 .env
-
+venv/
 # Build output
 dist/
 build/

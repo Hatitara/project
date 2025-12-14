@@ -1,12 +1,12 @@
 import pickle
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-
+import os
 import numpy as np
 import pandas as pd
 import requests
 import streamlit as st
-
+import kagglehub
 
 PLACEHOLDER_IMAGE = "https://via.placeholder.com/225x320?text=No+Image"
 JIKAN_PLACEHOLDER_HINTS = [
@@ -42,11 +42,12 @@ def create_search_label(row: pd.Series) -> str:
 @st.cache_data(show_spinner=False)
 def load_anime_csv() -> pd.DataFrame:
     """Load anime.csv for full metadata including English and Japanese names."""
-    csv_path = Path(__file__).parent / "anime.csv"
-    if not csv_path.exists():
-        return pd.DataFrame()
+    if not os.path.exists("/kaggle/input/anime-recommendation-database-2020/anime.csv"):
+        os.environ['KAGGLE_USERNAME'] = "hatitara"
+        os.environ['KAGGLE_KEY'] = "8076631b38e08331efbdfe56a0264de0"
+        path = kagglehub.dataset_download("hernan4444/anime-recommendation-database-2020")
 
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(os.path.join(path, 'anime.csv'))
 
     if "MAL_ID" in df.columns:
         df["anime_id"] = df["MAL_ID"].astype(str)
@@ -487,8 +488,6 @@ def main():
             else "Recommendations"
         )
         display_grid(rec_df, title=title, columns=5)
-    elif selected_names:
-        st.info("No recommendations could be generated for the current picks.")
 
 
 if __name__ == "__main__":
