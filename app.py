@@ -122,6 +122,17 @@ def load_artifacts():
         if col in anime_df.columns:
             anime_df[col] = anime_df[col].fillna("Unknown")
 
+    english_col = "English name" if "English name" in anime_df.columns else None
+    base_name_col = "Name" if "Name" in anime_df.columns else "name"
+    if english_col and base_name_col in anime_df.columns:
+        anime_df["Display_Name"] = np.where(
+            (anime_df[english_col].fillna("").str.strip() != "") & (anime_df[english_col] != "Unknown"),
+            anime_df[english_col],
+            anime_df[base_name_col],
+        )
+    else:
+        anime_df["Display_Name"] = anime_df.get(base_name_col, anime_df.get("anime_id", ""))
+
     anime_df["search_label"] = anime_df.apply(create_search_label, axis=1)
 
     name_col = "Name" if "Name" in anime_df.columns else "name"
@@ -355,7 +366,8 @@ def display_grid(df: pd.DataFrame, title: str, columns: int = 4):
                 if not image_url:
                     continue
                 col.image(image_url, use_container_width=True)
-                col.markdown(f"**{row.get('name', 'Unknown')}**")
+                display_title = row.get("Display_Name") or row.get("name") or row.get("Name") or "Unknown"
+                col.markdown(f"**{display_title}**")
 
                 genres = row.get("Genres") or row.get("genres")
                 if pd.notna(genres):
